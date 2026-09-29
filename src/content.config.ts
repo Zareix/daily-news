@@ -22,7 +22,7 @@ const newsCollection = defineCollection({
       }),
     /** Titre optionnel ; par défaut « Briefing du <date> ». */
     title: z.string().optional(),
-    /** Résumé court, 3 à 5 points. Affiché en encart et dans le flux Telegram. */
+    /** Résumé court, 3 à 5 points. Affiché en encart et dans la notification Bark. */
     tlDr: z.array(z.string()).default([]),
     /** Étiquettes libres, kebab-case (ex. `ransomware`, `linux-kernel`). */
     tags: z.array(z.string()).default([]),

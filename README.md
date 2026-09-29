@@ -10,12 +10,30 @@ info sourcée par un lien direct.
 ```
 cron Hermes (09:00 Europe/Paris)
    └─ skill `daily-news-briefing` : lecture des flux RSS → rédaction du markdown
-        └─ ~/.hermes/scripts/publish-briefing.mjs : commit src/content/news/<date>.md
-             └─ Cloudflare Workers Builds (git) : install → astro build + pagefind → wrangler deploy
-                  └─ Cloudflare Workers (assets statiques) → news.raphael-catarino.fr
+        ├─ ~/.hermes/scripts/publish-briefing.mjs : commit src/content/news/<date>.md
+        │    └─ Cloudflare Workers Builds (git) : install → astro build + pagefind → wrangler deploy
+        │         └─ Cloudflare Workers (assets statiques) → news.raphael-catarino.fr
+        └─ ~/.hermes/scripts/notify-briefing.mjs : notification iOS via Bark (API push)
 ```
 
-Le cron poste ensuite un résumé court (le `tlDr` du frontmatter) avec le lien du jour sur Telegram.
+Le cron pousse ensuite une notification iOS via Bark (titre + date, les points du `tlDr` en markdown,
+le lien du jour ouvert au tap) — plus aucun passage par Telegram.
+
+## Notification
+
+La notification est envoyée par `~/.hermes/scripts/notify-briefing.mjs`, à partir du même fichier
+markdown (frontmatter `date`, `tlDr`, `important`). La clé d'appareil et le serveur Bark sont lus dans
+`~/.hermes/.env` (avec repli sur le fichier si le process appelant ne les a pas chargés) :
+
+```bash
+BARK_KEY=<clé d'appareil Bark>
+BARK_URL=https://api.day.app   # ou l'URL d'un serveur Bark self-hosted
+```
+
+`important: true` dans le frontmatter passe la notification en `level=timeSensitive` (elle traverse le
+mode Concentration) et remplace le titre par « 🚨 Daily News — à retenir ». Tous les briefings partagent
+le groupe `Daily News`, et l'identifiant `daily-news-<date>` fait qu'une réédition du même jour remplace
+la notification au lieu de l'empiler.
 
 ## Non-indexation
 
@@ -74,7 +92,7 @@ Deux ou trois phrases maximum.
 ```
 
 Le corps n'inclut **pas** de `# H1` : le titre est dérivé du frontmatter. Le `tlDr` alimente à la
-fois la carte de la page d'accueil, l'encart « En bref » et le message Telegram.
+fois la carte de la page d'accueil, l'encart « En bref » et la notification Bark.
 
 ## Commandes
 

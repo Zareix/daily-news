@@ -31,8 +31,8 @@ const sources = [
     <p>
       Un cron tourne tous les matins à 9 h sur mon <a href="https://github.com/Zareix">Hermes</a> :
       il récupère les flux RSS ci-dessous, rédige le briefing en markdown, le commit dans le dépôt
-      du site, et poste un résumé court avec le lien sur Telegram. Le build et le déploiement se
-      font ensuite sur Cloudflare via GitHub Actions.
+      du site, puis m'envoie une notification iOS via Bark avec les points clés et le lien. Le build
+      et le déploiement se font ensuite sur Cloudflare Workers Builds, au commit.
     </p>
     <p>
       Conséquence utile : <strong>chaque briefing est un fichier markdown versionné</strong>. Un
