@@ -55,7 +55,7 @@ recherche) — à retirer aussi si tu veux zéro diffusion.
 src/
   content.config.ts        schéma Zod du frontmatter (date, title, tlDr, tags, important)
   content/news/*.md        un briefing par jour, nommé <YYYY-MM-DD>.md
-  layouts/Layout.astro     coquille HTML : thème clair/sombre, SEO, RSS, liens sortants
+  layouts/Layout.astro     coquille HTML : thème système (prefers-color-scheme), SEO, RSS, liens sortants
   components/BriefingCard.astro
   lib/dates.ts             formatage déterministe en Europe/Paris
   pages/
