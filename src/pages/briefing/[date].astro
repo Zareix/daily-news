@@ -1,6 +1,7 @@
 ---
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import ReadingProgress from '../../components/ReadingProgress.astro';
 import { byDateDesc, formatLong, readingTime } from '../../lib/dates';
 
 export async function getStaticPaths() {
@@ -31,6 +32,7 @@ const minutes = readingTime(entry.body ?? '');
 ---
 
 <Layout title={heading} description={tlDr[0] ?? `Briefing du ${formatLong(date)}`}>
+  <ReadingProgress />
   <header class="mb-8">
     <h1 class="text-3xl font-bold tracking-tight text-balance sm:text-4xl">{heading}</h1>
     <div class="mt-2 flex flex-wrap items-center gap-2 text-xs">
