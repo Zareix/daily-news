@@ -18,9 +18,10 @@ const fullTitle = title === 'Daily News' ? 'Daily News — briefing quotidien' :
 
 // La page d'accueil (« Briefings ») n'est pas répétée ici : le logo y mène déjà.
 // « À propos » et le sélecteur de thème vivent dans le pied de page.
-const nav = [
+// `icon` remplace le libellé visible ; `label` reste le nom accessible (aria-label + title).
+const nav: { href: string; label: string; icon?: 'search' }[] = [
   { href: '/tags/', label: 'Étiquettes' },
-  { href: '/search/', label: 'Recherche' },
+  { href: '/search/', label: 'Recherche', icon: 'search' },
 ];
 
 const current = Astro.url.pathname;
@@ -91,6 +92,8 @@ const isActive = (href: string) => (href === '/' ? current === '/' : current.sta
               <a
                 href={item.href}
                 aria-current={isActive(item.href) ? 'page' : undefined}
+                aria-label={item.icon ? item.label : undefined}
+                title={item.icon ? item.label : undefined}
                 class:list={[
                   'rounded-md px-2 py-1.5 whitespace-nowrap transition-colors sm:px-2.5',
                   isActive(item.href)
@@ -98,7 +101,23 @@ const isActive = (href: string) => (href === '/' ? current === '/' : current.sta
                     : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-stone-100',
                 ]}
               >
-                {item.label}
+                {item.icon === 'search' ? (
+                  <svg
+                    class="block size-4"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="m21 21-4.34-4.34"></path>
+                    <circle cx="11" cy="11" r="8"></circle>
+                  </svg>
+                ) : (
+                  item.label
+                )}
               </a>
             ))
           }
