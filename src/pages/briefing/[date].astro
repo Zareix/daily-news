@@ -16,7 +16,7 @@ export async function getStaticPaths() {
 // élargit les props à `unknown`.
 const { entry } = Astro.props as { entry: CollectionEntry<'news'> };
 const { Content, headings } = await render(entry);
-const { date, title, tags, tlDr, important } = entry.data;
+const { date, title, tags, tlDr } = entry.data;
 
 const all = (await getCollection('news')).sort((a, b) => byDateDesc(a.data.date, b.data.date));
 const index = all.findIndex((candidate) => candidate.data.date === date);
@@ -44,13 +44,6 @@ const minutes = readingTime(entry.body ?? '');
       </time>
       <span aria-hidden="true" class="text-slate-300 dark:text-slate-700">·</span>
       <span class="text-slate-500 dark:text-slate-400">{minutes} min de lecture</span>
-      {
-        important && (
-          <span class="rounded-full bg-amber-100 px-2 py-0.5 font-medium text-amber-800 dark:bg-amber-500/15 dark:text-amber-300">
-            à retenir
-          </span>
-        )
-      }
     </div>
 
     <h1 class="mt-2 text-3xl font-bold tracking-tight text-balance sm:text-4xl">{heading}</h1>

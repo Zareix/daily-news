@@ -9,7 +9,7 @@ interface Props {
 }
 
 const { entry, showTlDr = false } = Astro.props;
-const { date, title, tags, tlDr, important } = entry.data;
+const { date, title, tags, tlDr } = entry.data;
 
 const heading = title ?? `Briefing du ${formatLong(date)}`;
 const preview = showTlDr ? tlDr.slice(0, 3) : [];
@@ -22,15 +22,6 @@ const preview = showTlDr ? tlDr.slice(0, 3) : [];
     <time datetime={date} class="font-medium text-slate-500 dark:text-slate-400">
       {formatLong(date)}
     </time>
-    {
-      important && (
-        <span
-          class="rounded-full bg-amber-100 px-2 py-0.5 font-medium text-amber-800 dark:bg-amber-500/15 dark:text-amber-300"
-        >
-          à retenir
-        </span>
-      )
-    }
   </div>
 
   <h2 class="mt-1 text-lg font-semibold tracking-tight">

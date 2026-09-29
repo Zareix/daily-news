@@ -26,8 +26,6 @@ const newsCollection = defineCollection({
     tlDr: z.array(z.string()).default([]),
     /** Étiquettes libres, kebab-case (ex. `ransomware`, `linux-kernel`). */
     tags: z.array(z.string()).default([]),
-    /** Marque un briefing qui mérite d'être mis en avant. */
-    important: z.boolean().default(false),
   }),
 });
 

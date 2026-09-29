@@ -16,11 +16,11 @@ const site = Astro.site ?? new URL('https://news.raphael-catarino.fr');
 const canonical = new URL(Astro.url.pathname, site);
 const fullTitle = title === 'Daily News' ? 'Daily News — briefing quotidien' : `${title} · Daily News`;
 
+// La page d'accueil (« Briefings ») n'est pas répétée ici : le logo y mène déjà.
+// « À propos » et le sélecteur de thème vivent dans le pied de page.
 const nav = [
-  { href: '/', label: 'Briefings' },
   { href: '/tags/', label: 'Étiquettes' },
   { href: '/search/', label: 'Recherche' },
-  { href: '/about/', label: 'À propos' },
 ];
 
 const current = Astro.url.pathname;
@@ -76,8 +76,8 @@ const isActive = (href: string) => (href === '/' ? current === '/' : current.sta
     <header
       class="sticky top-0 z-20 border-b border-slate-200/70 bg-stone-50/85 backdrop-blur-md dark:border-slate-800/70 dark:bg-slate-950/85"
     >
-      <div class="mx-auto flex max-w-4xl items-center gap-4 px-4 py-3 sm:px-6">
-        <a href="/" class="group flex items-baseline gap-2">
+      <div class="mx-auto flex max-w-4xl items-center gap-2 px-4 py-3 sm:gap-4 sm:px-6">
+        <a href="/" class="group flex shrink-0 items-baseline gap-2">
           <span class="text-base font-semibold tracking-tight">Daily&nbsp;News</span>
           <span
             class="hidden text-xs text-slate-500 transition-colors group-hover:text-accent-600 sm:inline dark:text-slate-400"
@@ -85,14 +85,14 @@ const isActive = (href: string) => (href === '/' ? current === '/' : current.sta
           >
         </a>
 
-        <nav class="ml-auto flex items-center gap-1 text-sm" aria-label="Navigation principale">
+        <nav class="ml-auto flex shrink-0 items-center gap-0.5 text-sm sm:gap-1" aria-label="Navigation principale">
           {
             nav.map((item) => (
               <a
                 href={item.href}
                 aria-current={isActive(item.href) ? 'page' : undefined}
                 class:list={[
-                  'rounded-md px-2.5 py-1.5 transition-colors',
+                  'rounded-md px-2 py-1.5 whitespace-nowrap transition-colors sm:px-2.5',
                   isActive(item.href)
                     ? 'bg-accent-50 font-medium text-accent-700 dark:bg-slate-900 dark:text-accent-400'
                     : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-stone-100',
@@ -104,37 +104,6 @@ const isActive = (href: string) => (href === '/' ? current === '/' : current.sta
           }
         </nav>
 
-        <button
-          id="theme-toggle"
-          type="button"
-          class="rounded-md border border-slate-200 p-1.5 text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 dark:border-slate-800 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-stone-100"
-          aria-label="Basculer le thème clair/sombre"
-        >
-          <svg
-            class="size-4 dark:hidden"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            aria-hidden="true"
-          >
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-          </svg>
-          <svg
-            class="hidden size-4 dark:block"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            aria-hidden="true"
-          >
-            <circle cx="12" cy="12" r="4"></circle>
-            <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
-            ></path>
-          </svg>
-        </button>
       </div>
     </header>
 
@@ -144,18 +113,50 @@ const isActive = (href: string) => (href === '/' ? current === '/' : current.sta
 
     <footer class="mt-16 border-t border-slate-200 dark:border-slate-800">
       <div
-        class="mx-auto flex max-w-4xl flex-col gap-2 px-4 py-8 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:px-6 dark:text-slate-400"
+        class="mx-auto flex max-w-4xl flex-col gap-3 px-4 py-8 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:px-6 dark:text-slate-400"
       >
-        <p>
-          Écrit par <a class="underline decoration-dotted hover:text-accent-600" href="/about/"
-            >le cron Hermes</a
-          >, chaque matin.
-        </p>
-        <p class="flex items-center gap-3">
+        <p>Écrit par le cron Hermes, chaque matin.</p>
+
+        <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
+          <a class="underline decoration-dotted hover:text-accent-600" href="/about/">À propos</a>
+          <span aria-hidden="true">·</span>
           <a class="underline decoration-dotted hover:text-accent-600" href="/rss.xml">RSS</a>
           <span aria-hidden="true">·</span>
           <span>{formatShort(new Date().toISOString().slice(0, 10))}</span>
-        </p>
+
+          <button
+            id="theme-toggle"
+            type="button"
+            title="Thème clair / sombre"
+            class="rounded-md border border-slate-200 p-1.5 text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 dark:border-slate-800 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-stone-100"
+            aria-label="Basculer le thème clair/sombre"
+          >
+            <svg
+              class="size-4 dark:hidden"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              aria-hidden="true"
+            >
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            <svg
+              class="hidden size-4 dark:block"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="4"></circle>
+              <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
+              ></path>
+            </svg>
+          </button>
+        </div>
       </div>
     </footer>
 
