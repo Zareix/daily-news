@@ -1,4 +1,5 @@
 ---
+import { Font } from 'astro:assets';
 import '../styles/global.css';
 import { formatShort } from '../lib/dates';
 
@@ -34,6 +35,13 @@ const isActive = (href: string) => (href === '/' ? current === '/' : current.sta
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
+
+    {/* Polices auto-hébergées via la Fonts API : les fichiers sont servis depuis /_astro/fonts/.
+        Inter et Newsreader sont préchargées (visibles au-dessus de la ligne de flottaison), pas la mono. */}
+    <Font cssVariable="--font-inter" preload />
+    <Font cssVariable="--font-newsreader" preload />
+    <Font cssVariable="--font-jetbrains-mono" />
+
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <meta name="robots" content="noindex, nofollow" />
@@ -65,7 +73,7 @@ const isActive = (href: string) => (href === '/' ? current === '/' : current.sta
     >
       <div class="mx-auto flex max-w-4xl items-center gap-2 px-4 py-3 sm:gap-4 sm:px-6">
         <a href="/" class="group flex shrink-0 items-baseline gap-2">
-          <span class="text-base font-semibold tracking-tight">Daily&nbsp;News</span>
+          <span class="font-serif text-base font-semibold tracking-tight">Daily&nbsp;News</span>
           <span
             class="hidden text-xs text-slate-500 transition-colors group-hover:text-accent-600 sm:inline dark:text-slate-400"
             >par Raphaël</span
