@@ -10,10 +10,10 @@ info sourcée par un lien direct.
 ```
 cron Hermes (09:00 Europe/Paris)
    └─ skill `daily-news-briefing` : lecture des flux RSS → rédaction du markdown
-        ├─ ~/.hermes/scripts/publish-briefing.mjs : commit src/content/news/<date>.md
+        ├─ $HERMES_HOME/scripts/publish-briefing.mjs : commit src/content/news/<date>.md
         │    └─ Cloudflare Workers Builds (git) : install → astro build + pagefind → wrangler deploy
         │         └─ Cloudflare Workers (assets statiques) → news.raphael-catarino.fr
-        └─ ~/.hermes/scripts/notify-briefing.mjs : notification iOS via Bark (API push)
+        └─ $HERMES_HOME/scripts/notify-briefing.mjs : notification iOS via Bark (API push)
 ```
 
 Le cron pousse ensuite une notification iOS via Bark (titre + date, les points du `tlDr` en markdown,
@@ -21,9 +21,9 @@ le lien du jour ouvert au tap) — plus aucun passage par Telegram.
 
 ## Notification
 
-La notification est envoyée par `~/.hermes/scripts/notify-briefing.mjs`, à partir du même fichier
+La notification est envoyée par `$HERMES_HOME/scripts/notify-briefing.mjs`, à partir du même fichier
 markdown (frontmatter `date`, `tlDr`). La clé d'appareil et le serveur Bark sont lus dans
-`~/.hermes/.env`, **qui fait foi** — l'environnement du process n'est qu'un repli, Hermes pouvant y
+`$HERMES_HOME/.env`, **qui fait foi** — l'environnement du process n'est qu'un repli, Hermes pouvant y
 garder une copie périmée du fichier :
 
 ```bash
