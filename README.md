@@ -11,7 +11,7 @@ info sourcée par un lien direct.
 cron Hermes (09:00 Europe/Paris)
    └─ skill `daily-news-briefing` : lecture des flux RSS → rédaction du markdown
         └─ ~/.hermes/scripts/publish-briefing.mjs : commit src/content/news/<date>.md
-             └─ GitHub Actions : bun install → astro build + pagefind → wrangler deploy
+             └─ Cloudflare Workers Builds (git) : install → astro build + pagefind → wrangler deploy
                   └─ Cloudflare Workers (assets statiques) → news.raphael-catarino.fr
 ```
 
@@ -77,16 +77,27 @@ Node ≥ 22.12 requis (astro 7) ; le runtime de référence est Bun.
 
 ## Déploiement
 
-Poussé sur `main` → GitHub Actions construit et déploie sur Cloudflare Workers (assets statiques,
-config dans `wrangler.jsonc`). Secrets à définir dans **Settings → Secrets and variables → Actions** :
+Le déploiement est branché directement sur ce dépôt depuis le **dashboard Cloudflare**
+(Workers & Pages → Create → Import a repository). Cloudflare clone le repo, build et déploie à
+chaque push sur `main` : aucun secret GitHub à maintenir.
 
-| Secret | Contenu |
+Réglages à saisir à la connexion :
+
+| Réglage | Valeur |
 | --- | --- |
-| `CLOUDFLARE_API_TOKEN` | token avec la permission *Workers Scripts: Edit* sur le compte |
-| `CLOUDFLARE_ACCOUNT_ID` | ID du compte Cloudflare |
+| Project name | `daily-news` (doit correspondre à `name` dans `wrangler.jsonc`) |
+| Build command | `npm install --include=dev && npm run build` |
+| Deploy command | `npx wrangler deploy` |
+| Variable de build | `NODE_VERSION` = `22.12.0` (Astro 7 exige Node ≥ 22.12) |
 
-Le domaine `news.raphael-catarino.fr` est rattaché au Worker via `routes[].custom_domain`, la zone
-`raphael-catarino.fr` étant déjà hébergée chez Cloudflare.
+`.node-version` fixe déjà la version de Node pour les builds qui le lisent ; `NODE_VERSION` dans le
+dashboard reste la ceinture de sécurité.
+
+Le domaine `news.raphael-catarino.fr` est rattaché au Worker via `routes[].custom_domain` dans
+`wrangler.jsonc` (la zone `raphael-catarino.fr` est déjà hébergée chez Cloudflare) : Cloudflare crée
+l'enregistrement DNS et le certificat automatiquement.
+
+`bun run deploy` (wrangler en local) reste possible pour déployer à la main.
 
 ## Ajouter un briefing à la main
 
