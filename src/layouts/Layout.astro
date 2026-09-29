@@ -35,9 +35,9 @@ const isActive = (href: string) => (href === '/' ? current === '/' : current.sta
     <meta name="generator" content={Astro.generator} />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
+    <meta name="robots" content="noindex, nofollow" />
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="sitemap" href="/sitemap-index.xml" />
     <link
       rel="alternate"
       type="application/rss+xml"
@@ -153,10 +153,6 @@ const isActive = (href: string) => (href === '/' ? current === '/' : current.sta
         </p>
         <p class="flex items-center gap-3">
           <a class="underline decoration-dotted hover:text-accent-600" href="/rss.xml">RSS</a>
-          <span aria-hidden="true">·</span>
-          <a class="underline decoration-dotted hover:text-accent-600" href="/sitemap-index.xml"
-            >Sitemap</a
-          >
           <span aria-hidden="true">·</span>
           <span>{formatShort(new Date().toISOString().slice(0, 10))}</span>
         </p>

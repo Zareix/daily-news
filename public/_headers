@@ -1,0 +1,4 @@
+# Ce site ne doit pas être indexé. Le fichier n'est pas servi comme asset :
+# Cloudflare l'applique aux réponses de tous les assets statiques.
+/*
+  X-Robots-Tag: noindex, nofollow

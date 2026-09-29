@@ -17,6 +17,19 @@ cron Hermes (09:00 Europe/Paris)
 
 Le cron poste ensuite un résumé court (le `tlDr` du frontmatter) avec le lien du jour sur Telegram.
 
+## Non-indexation
+
+Le site est volontairement absent des moteurs de recherche, via trois verrous complémentaires :
+
+- `public/robots.txt` → `User-agent: *` / `Disallow: /`
+- `public/_headers` → `X-Robots-Tag: noindex, nofollow` sur toutes les réponses (appliqué par
+  Cloudflare Workers static assets ; le fichier n'est pas servi comme asset)
+- `<meta name="robots" content="noindex, nofollow">` dans le layout
+
+L'intégration `@astrojs/sitemap` a été retirée : un sitemap est un signal d'indexation, et son lien
+avait été enlevé du pied de page. Le flux RSS reste exposé (un lecteur RSS n'est pas un moteur de
+recherche) — à retirer aussi si tu veux zéro diffusion.
+
 ## Structure
 
 ```
