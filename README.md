@@ -105,6 +105,15 @@ Pourquoi ces deux variables :
 ⚠️ Si tu montes Bun en local, aligne `BUN_VERSION` : un `bun.lock` écrit par une version plus récente
 que celle du build fait échouer l'install.
 
+`package.json` déclare aussi `"packageManager": "bun@1.4.2"` (comme sur `raphael-catarino-website`) :
+c'est la version de référence du dépôt, lisible par Renovate et l'outillage local. La doc Cloudflare
+ne documente toutefois que `BUN_VERSION` pour Bun — rien ne garantit que l'image lise `packageManager`,
+d'où les deux.
+
+Pour savoir lequel suffit : après un push, **Deployments → View build history** et regarder la ligne
+`Detected the following tools from environment: …`. Si elle affiche `bun@1.4.2`, la variable du
+dashboard est redondante ; si elle affiche `bun@1.2.15`, elle est nécessaire.
+
 Plan B si tu veux retirer Bun du build : générer un `package-lock.json`, puis `SKIP_DEPENDENCY_INSTALL=1`
 et build command `npm ci --include=dev && npm run build`.
 
