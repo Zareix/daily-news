@@ -23,7 +23,13 @@ export async function GET(context: APIContext) {
       'Briefing quotidien : France, code & informatique, cybersécurité, international. Chaque info sourcée.',
     site: context.site ?? 'https://news.raphael-catarino.fr',
     trailingSlash: true,
-    customData: '<language>fr-fr</language>',
+    // `@astrojs/rss` n'expose pas d'option `image` : on l'injecte dans <channel>, à l'endroit
+    // attendu par la DTD (après <language>, avant <item>). 144x144 est la taille maximale prévue
+    // par la spécification RSS 2.0 ; au-delà, le validateur râle.
+    customData:
+      '<language>fr-fr</language>' +
+      `<image><url>${site}/icon-144.png</url><title>Daily News</title>` +
+      `<link>${site}/</link><width>144</width><height>144</height></image>`,
     items: entries.map((entry) => {
       const lien = `${site}/briefing/${entry.data.date}/`;
       const resume =
