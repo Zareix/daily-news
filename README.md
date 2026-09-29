@@ -23,7 +23,8 @@ le lien du jour ouvert au tap) — plus aucun passage par Telegram.
 
 La notification est envoyée par `~/.hermes/scripts/notify-briefing.mjs`, à partir du même fichier
 markdown (frontmatter `date`, `tlDr`, `important`). La clé d'appareil et le serveur Bark sont lus dans
-`~/.hermes/.env` (avec repli sur le fichier si le process appelant ne les a pas chargés) :
+`~/.hermes/.env`, **qui fait foi** — l'environnement du process n'est qu'un repli, Hermes pouvant y
+garder une copie périmée du fichier :
 
 ```bash
 BARK_KEY=<clé d'appareil Bark>
