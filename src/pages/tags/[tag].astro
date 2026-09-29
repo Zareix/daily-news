@@ -1,0 +1,43 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import BriefingCard from '../../components/BriefingCard.astro';
+import { byDateDesc } from '../../lib/dates';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('news');
+
+  const grouped = new Map<string, CollectionEntry<'news'>[]>();
+  for (const entry of entries) {
+    for (const tag of entry.data.tags) {
+      const bucket = grouped.get(tag) ?? [];
+      bucket.push(entry);
+      grouped.set(tag, bucket);
+    }
+  }
+
+  return [...grouped.entries()].map(([tag, tagEntries]) => ({
+    params: { tag },
+    props: { tag, entries: tagEntries.sort((a, b) => byDateDesc(a.data.date, b.data.date)) },
+  }));
+};
+
+const { tag, entries } = Astro.props as { tag: string; entries: CollectionEntry<'news'>[] };
+---
+
+<Layout title={`#${tag}`} description={`Briefings étiquetés #${tag}.`}>
+  <nav class="mb-6 text-sm text-slate-500 dark:text-slate-400" aria-label="Fil d'Ariane">
+    <a href="/tags/" class="hover:text-accent-600 dark:hover:text-accent-400">Étiquettes</a>
+    <span aria-hidden="true"> / </span>
+    <span class="text-slate-700 dark:text-slate-300">#{tag}</span>
+  </nav>
+
+  <h1 class="text-3xl font-bold tracking-tight">#{tag}</h1>
+  <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+    {entries.length} briefing{entries.length > 1 ? 's' : ''}.
+  </p>
+
+  <div class="mt-8 space-y-3">
+    {entries.map((entry) => <BriefingCard entry={entry} />)}
+  </div>
+</Layout>

@@ -1,0 +1,113 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import BriefingCard from '../components/BriefingCard.astro';
+import { byDateDesc, formatLong, formatMonth, monthKey } from '../lib/dates';
+
+const entries = (await getCollection('news')).sort((a, b) =>
+  byDateDesc(a.data.date, b.data.date),
+);
+
+const [latest, ...previous] = entries;
+
+// Regroupement par mois pour garder l'archive lisible au fil des mois.
+const byMonth = new Map<string, typeof previous>();
+for (const entry of previous) {
+  const key = monthKey(entry.data.date);
+  const bucket = byMonth.get(key) ?? [];
+  bucket.push(entry);
+  byMonth.set(key, bucket);
+}
+---
+
+<Layout>
+  {
+    latest === undefined ? (
+      <div class="rounded-xl border border-dashed border-slate-300 p-10 text-center dark:border-slate-700">
+        <p class="font-medium">Aucun briefing publié pour le moment.</p>
+        <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+          Le prochain arrive demain matin, vers 9 h.
+        </p>
+      </div>
+    ) : (
+      <section class="mb-12">
+        <p class="text-xs font-semibold tracking-wide text-accent-600 uppercase dark:text-accent-400">
+          Dernier briefing
+        </p>
+        <h1 class="mt-1 text-3xl font-bold tracking-tight text-balance sm:text-4xl">
+          <a href={`/briefing/${latest.data.date}/`} class="hover:text-accent-600 dark:hover:text-accent-400">
+            {latest.data.title ?? formatLong(latest.data.date)}
+          </a>
+        </h1>
+        <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+          {formatLong(latest.data.date)}
+        </p>
+
+        {latest.data.tlDr.length > 0 && (
+          <ul class="mt-5 space-y-3">
+            {latest.data.tlDr.map((point) => (
+              <li class="flex gap-3 text-[0.95rem] leading-relaxed">
+                <span aria-hidden="true" class="mt-px text-accent-500">
+                  ▸
+                </span>
+                <span>{point}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <div class="mt-6 flex flex-wrap items-center gap-3">
+          <a
+            href={`/briefing/${latest.data.date}/`}
+            class="rounded-lg bg-accent-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-accent-700"
+          >
+            Lire le briefing complet
+          </a>
+          <a href="/rss.xml" class="text-sm text-slate-500 underline decoration-dotted hover:text-accent-600 dark:text-slate-400 dark:hover:text-accent-400">
+            S'abonner au flux RSS
+          </a>
+        </div>
+
+        {latest.data.tags.length > 0 && (
+          <ul class="mt-5 flex flex-wrap gap-1.5">
+            {latest.data.tags.map((tag) => (
+              <li>
+                <a
+                  href={`/tags/${tag}/`}
+                  class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600 transition-colors hover:bg-accent-100 hover:text-accent-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-accent-400"
+                >
+                  #{tag}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+    )
+  }
+
+  {
+    byMonth.size > 0 && (
+      <section>
+        <h2 class="text-xs font-semibold tracking-wide text-slate-500 uppercase dark:text-slate-400">
+          Archive
+        </h2>
+
+        <div class="mt-4 space-y-8">
+          {[...byMonth.values()].map((monthEntries) => (
+            <div>
+              <h3 class="mb-3 text-sm font-medium text-slate-500 capitalize dark:text-slate-400">
+                {formatMonth(monthEntries[0]!.data.date)}
+              </h3>
+              <div class="space-y-3">
+                {monthEntries.map((entry) => (
+                  <BriefingCard entry={entry} />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    )
+  }
+</Layout>

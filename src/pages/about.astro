@@ -1,0 +1,68 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const entries = await getCollection('news');
+
+const sources = [
+  { name: 'Le Monde', url: 'https://www.lemonde.fr/rss/une.xml', what: 'France, politique, international' },
+  { name: 'Google News FR', url: 'https://news.google.com/rss?hl=fr&gl=FR&ceid=FR:fr', what: 'agrégateur généraliste (redirections jamais citées)' },
+  { name: 'The Hacker News', url: 'https://feeds.feedburner.com/TheHackersNews', what: 'cybersécurité' },
+  { name: 'BleepingComputer', url: 'https://www.bleepingcomputer.com/feed/', what: 'cybersécurité, fuites de données' },
+  { name: 'Hacker News', url: 'https://hnrss.org/frontpage', what: 'code, tech, dev' },
+];
+---
+
+<Layout
+  title="À propos"
+  description="Comment ce briefing quotidien est produit : sources, fréquence et outillage."
+>
+  <h1 class="text-3xl font-bold tracking-tight">À propos</h1>
+
+  <div class="prose prose-slate mt-6 max-w-none dark:prose-invert">
+    <p>
+      Ce site publie <strong>un briefing d'actualités par jour</strong> en français, structuré en
+      quatre rubriques : France, code &amp; informatique, cybersécurité &amp; fuites de données,
+      international. Chaque info tient en deux ou trois phrases et cite ses sources avec un lien
+      direct vers l'article — jamais de redirection d'agrégateur.
+    </p>
+
+    <h2>La fabrique</h2>
+    <p>
+      Un cron tourne tous les matins à 9 h sur mon <a href="https://github.com/Zareix">Hermes</a> :
+      il récupère les flux RSS ci-dessous, rédige le briefing en markdown, le commit dans le dépôt
+      du site, et poste un résumé court avec le lien sur Telegram. Le build et le déploiement se
+      font ensuite sur Cloudflare via GitHub Actions.
+    </p>
+    <p>
+      Conséquence utile : <strong>chaque briefing est un fichier markdown versionné</strong>. Un
+      correctif se fait en éditant un fichier, l'historique est complet, et le site est du HTML
+      statique mis en cache au plus près des visiteurs.
+    </p>
+
+    <h2>Sources</h2>
+    <ul>
+      {
+        sources.map((source) => (
+          <li>
+            <a href={source.url}>{source.name}</a> — {source.what}
+          </li>
+        ))
+      }
+    </ul>
+
+    <h2>Flux</h2>
+    <p>
+      <a href="/rss.xml">RSS</a> pour suivre le site depuis un lecteur, ou
+      <a href="/search/">la recherche plein texte</a> pour fouiller l'archive.
+      {entries.length} briefing{entries.length > 1 ? 's' : ''} publié{entries.length > 1 ? 's' : ''}
+      à ce jour.
+    </p>
+
+    <h2>Stack</h2>
+    <p>
+      Astro (SSG), Tailwind CSS et son plugin typography, index Pagefind, servi par Cloudflare
+      Workers. Le contenu est écrit par un agent Hermes, révisable par un humain.
+    </p>
+  </div>
+</Layout>

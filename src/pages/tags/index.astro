@@ -1,0 +1,56 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+const entries = await getCollection('news');
+
+const counts = new Map<string, number>();
+for (const entry of entries) {
+  for (const tag of entry.data.tags) {
+    counts.set(tag, (counts.get(tag) ?? 0) + 1);
+  }
+}
+
+const tags = [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+const max = Math.max(1, ...counts.values());
+---
+
+<Layout title="Étiquettes" description="Toutes les étiquettes des briefings quotidiens.">
+  <h1 class="text-3xl font-bold tracking-tight">Étiquettes</h1>
+  <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+    {tags.length} étiquette{tags.length > 1 ? 's' : ''} sur {entries.length} briefing{
+      entries.length > 1 ? 's' : ''
+    }.
+  </p>
+
+  {
+    tags.length === 0 ? (
+      <p class="mt-8 text-sm text-slate-500 dark:text-slate-400">
+        Aucune étiquette pour l'instant.
+      </p>
+    ) : (
+      <ul class="mt-8 space-y-2">
+        {tags.map(([tag, count]) => (
+          <li>
+            <a
+              href={`/tags/${tag}/`}
+              class="group flex items-center gap-3 rounded-lg border border-slate-200 px-3 py-2 transition-colors hover:border-accent-200 hover:bg-white dark:border-slate-800 dark:hover:border-slate-700 dark:hover:bg-slate-900/60"
+            >
+              <span class="font-medium group-hover:text-accent-600 dark:group-hover:text-accent-400">
+                #{tag}
+              </span>
+              <span
+                class="ml-auto h-1.5 rounded-full bg-accent-400/70"
+                style={`width: ${Math.round((count / max) * 100)}px`}
+                aria-hidden="true"
+              />
+              <span class="w-6 text-right text-xs text-slate-500 tabular-nums dark:text-slate-400">
+                {count}
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</Layout>
