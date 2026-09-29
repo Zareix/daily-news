@@ -22,7 +22,7 @@ le lien du jour ouvert au tap) — plus aucun passage par Telegram.
 ## Notification
 
 La notification est envoyée par `~/.hermes/scripts/notify-briefing.mjs`, à partir du même fichier
-markdown (frontmatter `date`, `tlDr`, `important`). La clé d'appareil et le serveur Bark sont lus dans
+markdown (frontmatter `date`, `tlDr`). La clé d'appareil et le serveur Bark sont lus dans
 `~/.hermes/.env`, **qui fait foi** — l'environnement du process n'est qu'un repli, Hermes pouvant y
 garder une copie périmée du fichier :
 
@@ -31,10 +31,9 @@ BARK_KEY=<clé d'appareil Bark>
 BARK_URL=https://api.day.app   # ou l'URL d'un serveur Bark self-hosted
 ```
 
-`important: true` dans le frontmatter passe la notification en `level=timeSensitive` (elle traverse le
-mode Concentration) et remplace le titre par « 🚨 Daily News — à retenir ». Tous les briefings partagent
-le groupe `Daily News`, et l'identifiant `daily-news-<date>` fait qu'une réédition du même jour remplace
-la notification au lieu de l'empiler.
+Tous les briefings partagent le groupe `Daily News`, et l'identifiant `daily-news-<date>` fait qu'une
+réédition du même jour remplace la notification au lieu de l'empiler. Le niveau d'interruption est
+`active` par défaut ; le notifier accepte `--level timeSensitive` pour traverser le mode Concentration.
 
 ## Non-indexation
 
@@ -52,8 +51,9 @@ recherche) — à retirer aussi si tu veux zéro diffusion.
 ## Structure
 
 ```
+astro.config.mjs           polices (Fonts API d'Astro), Tailwind, site, préchargement
 src/
-  content.config.ts        schéma Zod du frontmatter (date, title, tlDr, tags, important)
+  content.config.ts        schéma Zod du frontmatter (date, title, tlDr, tags)
   content/news/*.md        un briefing par jour, nommé <YYYY-MM-DD>.md
   layouts/Layout.astro     coquille HTML : thème système (prefers-color-scheme), SEO, RSS, liens sortants
   components/BriefingCard.astro
@@ -66,6 +66,29 @@ src/
     about.astro            404.astro
     rss.xml.ts
 ```
+
+## Typographie
+
+Les polices passent par la **Fonts API d'Astro** (`fonts` dans `astro.config.mjs`, rendues par
+`<Font />` dans le layout) : elles sont téléchargées au build et servies depuis `/_astro/fonts/`,
+donc **aucune requête vers Google chez le visiteur**, avec des fallbacks à métriques ajustées pour
+éviter le décalage de mise en page pendant le chargement.
+
+| Rôle | Police |
+| --- | --- |
+| Nom du site et `h1` | Newsreader (serif) |
+| Corps, interface, `h2`/`h3` | Inter |
+| Blocs de code | JetBrains Mono |
+
+Les familles du thème pointent sur les variables injectées par `<Font />` via un bloc `@theme inline`
+(un `@theme` classique recopierait la valeur à la compilation et casserait le lien). Ne pas
+réintroduire `@fontsource-variable/inter`.
+
+## Cache
+
+`public/_headers` déclare `Cache-Control: public, max-age=31536000, immutable` pour `/_astro/*` : ces
+fichiers portent une empreinte de contenu dans leur nom (polices, CSS, JS), ils sont donc immuables.
+Le reste du site (HTML) reste en revalidation à chaque visite.
 
 ## Format d'un briefing
 
@@ -80,7 +103,6 @@ tlDr:
 tags:
   - cybersecurite
   - cve
-important: false
 ---
 
 ## 🇫🇷 FRANCE
