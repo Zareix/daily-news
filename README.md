@@ -86,12 +86,27 @@ Réglages à saisir à la connexion :
 | Réglage | Valeur |
 | --- | --- |
 | Project name | `daily-news` (doit correspondre à `name` dans `wrangler.jsonc`) |
-| Build command | `npm install --include=dev && npm run build` |
+| Build command | `bun run build` |
 | Deploy command | `npx wrangler deploy` |
-| Variable de build | `NODE_VERSION` = `22.12.0` (Astro 7 exige Node ≥ 22.12) |
+| Variable de build | `BUN_VERSION` = `1.4.2` — **indispensable** |
+| Variable de build | `NODE_VERSION` = `22.23.2` |
 
-`.node-version` fixe déjà la version de Node pour les builds qui le lisent ; `NODE_VERSION` dans le
-dashboard reste la ceinture de sécurité.
+Pourquoi ces deux variables :
+
+- **`BUN_VERSION`** : l'image de build par défaut embarque **bun 1.2.15**, qui ne sait pas lire le
+  `bun.lock` (« version 2 ») écrit par bun 1.4. Sans ce pin, l'installation automatique des
+  dépendances échoue avec `error: Unknown lockfile version` puis
+  `error: lockfile had changes, but lockfile is frozen`. Bun n'accepte qu'une variable
+  d'environnement pour ça (pas de fichier équivalent à `.node-version`), donc c'est à régler dans
+  **Settings → Build → Build Variables and Secrets** du projet.
+- **`NODE_VERSION`** : `22.23.2` est préinstallé dans l'image (pas de téléchargement). Astro 7 exige
+  Node ≥ 22.12 ; le fichier `.node-version` du dépôt couvre déjà ce point.
+
+⚠️ Si tu montes Bun en local, aligne `BUN_VERSION` : un `bun.lock` écrit par une version plus récente
+que celle du build fait échouer l'install.
+
+Plan B si tu veux retirer Bun du build : générer un `package-lock.json`, puis `SKIP_DEPENDENCY_INSTALL=1`
+et build command `npm ci --include=dev && npm run build`.
 
 Le domaine `news.raphael-catarino.fr` est rattaché au Worker via `routes[].custom_domain` dans
 `wrangler.jsonc` (la zone `raphael-catarino.fr` est déjà hébergée chez Cloudflare) : Cloudflare crée
