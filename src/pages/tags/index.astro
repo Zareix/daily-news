@@ -15,8 +15,8 @@ const tags = [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeComp
 const max = Math.max(1, ...counts.values());
 ---
 
-<Layout title="Étiquettes" description="Toutes les étiquettes des briefings quotidiens.">
-  <h1 class="text-3xl font-bold tracking-tight">Étiquettes</h1>
+<Layout title="Tags" description="Toutes les tags des briefings quotidiens.">
+  <h1 class="text-3xl font-bold tracking-tight">Tags</h1>
   <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
     {tags.length} étiquette{tags.length > 1 ? 's' : ''} sur {entries.length} briefing{
       entries.length > 1 ? 's' : ''
