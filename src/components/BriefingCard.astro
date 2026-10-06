@@ -18,12 +18,6 @@ const preview = showTlDr ? tlDr.slice(0, 3) : [];
 <article
   class="group relative rounded-xl border border-slate-200 bg-white/70 p-4 transition-colors hover:border-accent-200 hover:bg-white dark:border-slate-800 dark:bg-slate-900/40 dark:hover:border-slate-700 dark:hover:bg-slate-900"
 >
-  <div class="flex flex-wrap items-center gap-2 text-xs">
-    <time datetime={date} class="font-medium text-slate-500 dark:text-slate-400">
-      {formatLong(date)}
-    </time>
-  </div>
-
   <h2 class="mt-1 text-lg font-semibold tracking-tight">
     <a
       href={`/briefing/${date}/`}
@@ -45,7 +39,7 @@ const preview = showTlDr ? tlDr.slice(0, 3) : [];
 
   {
     tags.length > 0 && (
-      <ul class="relative z-10 mt-3 flex flex-wrap gap-1.5">
+      <ul class="relative z-10 mt-2 flex flex-wrap gap-1.5">
         {tags.map((tag) => (
           <li>
             <a

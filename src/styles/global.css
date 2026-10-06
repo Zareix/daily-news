@@ -35,13 +35,12 @@ html {
 }
 
 body {
-  @apply bg-stone-50 text-slate-900 antialiased dark:bg-slate-950 dark:text-stone-200;
+  @apply bg-stone-50 text-slate-900 antialiased dark:bg-black dark:text-stone-100;
 }
 
-/* Titres en serif (Newsreader), corps en Inter. Les h2/h3 du briefing passent aussi par ici. */
-h1,
-h2,
-h3 {
+/* Serif (Newsreader) réservé au titre du site (classe `font-serif` dans le layout) et aux h1.
+   Les titres de corps — h2/h3 du briefing, titres de cartes, encarts — restent en Inter. */
+h1 {
   @apply font-serif;
 }
 
@@ -91,4 +90,28 @@ h3 {
   html {
     scroll-behavior: auto;
   }
+
+  #retour-haut {
+    transition: none;
+  }
+}
+
+#retour-haut {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(0.5rem);
+  transition:
+    opacity 0.2s ease-out,
+    transform 0.2s ease-out,
+    visibility 0s linear 0.2s;
+}
+
+#retour-haut[data-visible] {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition:
+    opacity 0.2s ease-out,
+    transform 0.2s ease-out,
+    visibility 0s;
 }

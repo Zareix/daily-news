@@ -21,7 +21,7 @@ const fullTitle = title === 'Daily News' ? 'Daily News — briefing quotidien' :
 // « À propos » et le sélecteur de thème vivent dans le pied de page.
 // `icon` remplace le libellé visible ; `label` reste le nom accessible (aria-label + title).
 const nav: { href: string; label: string; icon?: 'search' }[] = [
-  { href: '/tags/', label: 'Étiquettes' },
+  { href: '/tags/', label: 'Tags' },
   { href: '/search/', label: 'Recherche', icon: 'search' },
 ];
 
@@ -47,6 +47,7 @@ const isActive = (href: string) => (href === '/' ? current === '/' : current.sta
     <meta name="robots" content="noindex, nofollow" />
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link
       rel="alternate"
       type="application/rss+xml"
@@ -69,7 +70,7 @@ const isActive = (href: string) => (href === '/' ? current === '/' : current.sta
     >
 
     <header
-      class="sticky top-0 z-20 border-b border-slate-200/70 bg-stone-50/85 backdrop-blur-md dark:border-slate-800/70 dark:bg-slate-950/85"
+      class="sticky top-0 z-20 border-b border-slate-200/70 bg-stone-50/70 backdrop-blur-md dark:border-slate-800/70 dark:bg-slate-950/70"
     >
       <div class="mx-auto flex max-w-4xl items-center gap-2 px-4 py-3 sm:gap-4 sm:px-6">
         <a href="/" class="group flex shrink-0 items-baseline gap-2">
@@ -140,6 +141,27 @@ const isActive = (href: string) => (href === '/' ? current === '/' : current.sta
       </div>
     </footer>
 
+    <button
+      id="retour-haut"
+      type="button"
+      aria-label="Revenir en haut de la page"
+      title="Revenir en haut de la page"
+      class="fixed right-4 bottom-4 z-30 flex size-10 cursor-pointer items-center justify-center rounded-full border border-slate-200/70 bg-stone-50/80 text-slate-600 shadow-md backdrop-blur-md transition-colors hover:text-accent-600 dark:border-slate-800/70 dark:bg-slate-950/80 dark:text-slate-400 dark:hover:text-accent-400 sm:right-6 sm:bottom-6"
+    >
+      <svg
+        class="block size-4"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="m18 15-6-6-6 6"></path>
+      </svg>
+    </button>
+
     <script>
       // Les liens sortants s'ouvrent dans un nouvel onglet.
       for (const link of document.querySelectorAll<HTMLAnchorElement>('a[href^="http"]')) {
@@ -147,6 +169,14 @@ const isActive = (href: string) => (href === '/' ? current === '/' : current.sta
           link.target = '_blank';
           link.rel = 'noopener noreferrer';
         }
+      }
+
+      const retourHaut = document.querySelector<HTMLButtonElement>('#retour-haut');
+      if (retourHaut) {
+        const bascule = () => retourHaut.toggleAttribute('data-visible', window.scrollY >= 600);
+        bascule();
+        window.addEventListener('scroll', bascule, { passive: true });
+        retourHaut.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
       }
     </script>
   </body>
