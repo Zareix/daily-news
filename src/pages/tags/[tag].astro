@@ -27,7 +27,7 @@ const { tag, entries } = Astro.props as { tag: string; entries: CollectionEntry<
 
 <Layout title={`#${tag}`} description={`Briefings étiquetés #${tag}.`}>
   <nav class="mb-6 text-sm text-slate-500 dark:text-slate-400" aria-label="Fil d'Ariane">
-    <a href="/tags/" class="hover:text-accent-600 dark:hover:text-accent-400">Étiquettes</a>
+    <a href="/tags/" class="hover:text-accent-600 dark:hover:text-accent-400">Tags</a>
     <span aria-hidden="true"> / </span>
     <span class="text-slate-700 dark:text-slate-300">#{tag}</span>
   </nav>

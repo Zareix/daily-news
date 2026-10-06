@@ -1,0 +1,21 @@
+<div
+  id="progression-lecture"
+  aria-hidden="true"
+  class="fixed inset-x-0 top-0 z-40 h-0.5 scale-x-0 origin-left bg-accent-600 dark:bg-accent-400"
+>
+</div>
+
+<script>
+  const progression = document.querySelector<HTMLElement>('#progression-lecture');
+  if (progression) {
+    progression.classList.remove('scale-x-0');
+
+    const maj = () => {
+      const restant = document.documentElement.scrollHeight - window.innerHeight;
+      progression.style.transform = `scaleX(${restant > 0 ? Math.min(window.scrollY / restant, 1) : 0})`;
+    };
+    maj();
+    window.addEventListener('scroll', maj, { passive: true });
+    window.addEventListener('resize', maj);
+  }
+</script>

@@ -29,10 +29,10 @@ const sources = [
 
     <h2>La fabrique</h2>
     <p>
-      Un cron tourne tous les matins à 9 h sur mon <a href="https://github.com/Zareix">Hermes</a> :
+      Un cron tourne tous les matins sur mon <a href="https://hermes-agent.nousresearch.com/">Hermes</a> :
       il récupère les flux RSS ci-dessous, rédige le briefing en markdown, le commit dans le dépôt
-      du site, et poste un résumé court avec le lien sur Telegram. Le build et le déploiement se
-      font ensuite sur Cloudflare via GitHub Actions.
+      du site, puis m'envoie une notification iOS via Bark avec les points clés et le lien. Le build
+      et le déploiement se font ensuite sur Cloudflare Workers Builds, au commit.
     </p>
     <p>
       Conséquence utile : <strong>chaque briefing est un fichier markdown versionné</strong>. Un
@@ -53,10 +53,11 @@ const sources = [
 
     <h2>Flux</h2>
     <p>
-      <a href="/rss.xml">RSS</a> pour suivre le site depuis un lecteur, ou
-      <a href="/search/">la recherche plein texte</a> pour fouiller l'archive.
-      {entries.length} briefing{entries.length > 1 ? 's' : ''} publié{entries.length > 1 ? 's' : ''}
-      à ce jour.
+      <a href="/rss.xml">RSS</a> pour suivre le site depuis un lecteur, ou <a href="/search/">la recherche plein texte</a> pour fouiller l'archive.
+    </p>
+
+    <p>
+    {entries.length} briefing{entries.length > 1 ? 's' : ''} publié{entries.length > 1 ? 's' : ''} à ce jour.
     </p>
 
     <h2>Stack</h2>

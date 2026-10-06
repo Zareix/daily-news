@@ -2,3 +2,8 @@
 # Cloudflare l'applique aux réponses de tous les assets statiques.
 /*
   X-Robots-Tag: noindex, nofollow
+
+# Les fichiers de /_astro/ ont un nom haché (empreinte du contenu) : ils peuvent être mis en
+# cache indéfiniment, polices comprises. Règle plus spécifique, elle l'emporte sur /*.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable

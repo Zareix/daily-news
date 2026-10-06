@@ -10,12 +10,30 @@ info sourcée par un lien direct.
 ```
 cron Hermes (09:00 Europe/Paris)
    └─ skill `daily-news-briefing` : lecture des flux RSS → rédaction du markdown
-        └─ ~/.hermes/scripts/publish-briefing.mjs : commit src/content/news/<date>.md
-             └─ Cloudflare Workers Builds (git) : install → astro build + pagefind → wrangler deploy
-                  └─ Cloudflare Workers (assets statiques) → news.raphael-catarino.fr
+        ├─ $HERMES_HOME/scripts/publish-briefing.mjs : commit src/content/news/<date>.md
+        │    └─ Cloudflare Workers Builds (git) : install → astro build + pagefind → wrangler deploy
+        │         └─ Cloudflare Workers (assets statiques) → news.raphael-catarino.fr
+        └─ $HERMES_HOME/scripts/notify-briefing.mjs : notification iOS via Bark (API push)
 ```
 
-Le cron poste ensuite un résumé court (le `tlDr` du frontmatter) avec le lien du jour sur Telegram.
+Le cron pousse ensuite une notification iOS via Bark (titre + date, les points du `tlDr` en markdown,
+le lien du jour ouvert au tap) — plus aucun passage par Telegram.
+
+## Notification
+
+La notification est envoyée par `$HERMES_HOME/scripts/notify-briefing.mjs`, à partir du même fichier
+markdown (frontmatter `date`, `tlDr`). La clé d'appareil et le serveur Bark sont lus dans
+`$HERMES_HOME/.env`, **qui fait foi** — l'environnement du process n'est qu'un repli, Hermes pouvant y
+garder une copie périmée du fichier :
+
+```bash
+BARK_KEY=<clé d'appareil Bark>
+BARK_URL=https://api.day.app   # ou l'URL d'un serveur Bark self-hosted
+```
+
+Tous les briefings partagent le groupe `Daily News`, et l'identifiant `daily-news-<date>` fait qu'une
+réédition du même jour remplace la notification au lieu de l'empiler. Le niveau d'interruption est
+`active` par défaut ; le notifier accepte `--level timeSensitive` pour traverser le mode Concentration.
 
 ## Non-indexation
 
@@ -33,10 +51,11 @@ recherche) — à retirer aussi si tu veux zéro diffusion.
 ## Structure
 
 ```
+astro.config.mjs           polices (Fonts API d'Astro), Tailwind, site, préchargement
 src/
-  content.config.ts        schéma Zod du frontmatter (date, title, tlDr, tags, important)
+  content.config.ts        schéma Zod du frontmatter (date, title, tlDr, tags)
   content/news/*.md        un briefing par jour, nommé <YYYY-MM-DD>.md
-  layouts/Layout.astro     coquille HTML : thème clair/sombre, SEO, RSS, liens sortants
+  layouts/Layout.astro     coquille HTML : thème système (prefers-color-scheme), SEO, RSS, liens sortants
   components/BriefingCard.astro
   lib/dates.ts             formatage déterministe en Europe/Paris
   pages/
@@ -47,6 +66,29 @@ src/
     about.astro            404.astro
     rss.xml.ts
 ```
+
+## Typographie
+
+Les polices passent par la **Fonts API d'Astro** (`fonts` dans `astro.config.mjs`, rendues par
+`<Font />` dans le layout) : elles sont téléchargées au build et servies depuis `/_astro/fonts/`,
+donc **aucune requête vers Google chez le visiteur**, avec des fallbacks à métriques ajustées pour
+éviter le décalage de mise en page pendant le chargement.
+
+| Rôle | Police |
+| --- | --- |
+| Nom du site et `h1` | Newsreader (serif) |
+| Corps, interface, `h2`/`h3` | Inter |
+| Blocs de code | JetBrains Mono |
+
+Les familles du thème pointent sur les variables injectées par `<Font />` via un bloc `@theme inline`
+(un `@theme` classique recopierait la valeur à la compilation et casserait le lien). Ne pas
+réintroduire `@fontsource-variable/inter`.
+
+## Cache
+
+`public/_headers` déclare `Cache-Control: public, max-age=31536000, immutable` pour `/_astro/*` : ces
+fichiers portent une empreinte de contenu dans leur nom (polices, CSS, JS), ils sont donc immuables.
+Le reste du site (HTML) reste en revalidation à chaque visite.
 
 ## Format d'un briefing
 
@@ -61,7 +103,6 @@ tlDr:
 tags:
   - cybersecurite
   - cve
-important: false
 ---
 
 ## 🇫🇷 FRANCE
@@ -74,7 +115,7 @@ Deux ou trois phrases maximum.
 ```
 
 Le corps n'inclut **pas** de `# H1` : le titre est dérivé du frontmatter. Le `tlDr` alimente à la
-fois la carte de la page d'accueil, l'encart « En bref » et le message Telegram.
+fois la carte de la page d'accueil, l'encart « En bref » et la notification Bark.
 
 ## Commandes
 
