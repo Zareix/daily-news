@@ -1,6 +1,6 @@
-import { defineCollection } from 'astro:content';
-import { glob } from 'astro/loaders';
-import { z } from 'astro/zod';
+import { glob } from "astro/loaders"
+import { z } from "astro/zod"
+import { defineCollection } from "astro:content"
 
 /**
  * Un briefing = un fichier markdown `src/content/news/<YYYY-MM-DD>.md`.
@@ -10,7 +10,7 @@ import { z } from 'astro/zod';
  * le nom de fichier doit donc être `<date>.md`.
  */
 const newsCollection = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/news' }),
+  loader: glob({ pattern: "**/*.md", base: "./src/content/news" }),
   schema: z.object({
     // Le parseur YAML transforme `2026-07-09` en objet Date, mais un agent peut
     // aussi écrire `"2026-07-09"` entre guillemets : on normalise les deux en jour ISO.
@@ -18,7 +18,7 @@ const newsCollection = defineCollection({
       .union([z.string(), z.date()])
       .transform((value) => (value instanceof Date ? value.toISOString().slice(0, 10) : value))
       .refine((value) => /^\d{4}-\d{2}-\d{2}$/.test(value), {
-        message: 'date attendue au format YYYY-MM-DD',
+        message: "date attendue au format YYYY-MM-DD",
       }),
     /** Titre optionnel ; par défaut « Briefing du <date> ». */
     title: z.string().optional(),
@@ -27,8 +27,8 @@ const newsCollection = defineCollection({
     /** Étiquettes libres, kebab-case (ex. `ransomware`, `linux-kernel`). */
     tags: z.array(z.string()).default([]),
   }),
-});
+})
 
 export const collections = {
   news: newsCollection,
-};
+}

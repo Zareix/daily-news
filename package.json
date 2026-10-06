@@ -1,19 +1,18 @@
 {
   "name": "daily-news",
-  "type": "module",
   "version": "0.1.0",
   "private": true,
-  "packageManager": "bun@1.4.2",
-  "engines": {
-    "node": ">=22.12.0"
-  },
+  "type": "module",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build && pagefind --site dist",
     "preview": "astro preview",
     "deploy": "wrangler deploy",
-    "check": "astro check && tsc --noEmit",
-    "astro": "astro"
+    "check": "bun run format && bun run lint:fix",
+    "astro": "astro",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "format": "oxfmt"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.19",
@@ -22,13 +21,20 @@
     "astro": "^7.3.5",
     "tailwindcss": "^4.3.3"
   },
-  "allowScripts": {
-    "esbuild": true
-  },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
+    "oxfmt": "^0.68.0",
+    "oxlint": "^1.83.0",
+    "oxlint-tsgolint": "^7.0.2002",
     "pagefind": "^1.5.2",
-    "typescript": "^5.9.3",
-    "wrangler": "^4.143.0"
+    "typescript": "^7.0.2",
+    "wrangler": "^4.147.0"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "packageManager": "bun@1.4.2",
+  "allowScripts": {
+    "esbuild": true
   }
 }

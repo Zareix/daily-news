@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 @plugin '@tailwindcss/typography';
 
 /* Tailwind v4 : le mode sombre suit uniquement le réglage système (`prefers-color-scheme`).
@@ -12,8 +12,8 @@
    au moment de la compilation. Le repli couvre le cas d'une variable absente. */
 @theme inline {
   --font-sans: var(--font-inter, ui-sans-serif, system-ui, -apple-system, sans-serif);
-  --font-serif: var(--font-newsreader, ui-serif, Georgia, 'Times New Roman', serif);
-  --font-mono: var(--font-jetbrains-mono, ui-monospace, 'SFMono-Regular', Menlo, monospace);
+  --font-serif: var(--font-newsreader, ui-serif, Georgia, "Times New Roman", serif);
+  --font-mono: var(--font-jetbrains-mono, ui-monospace, "SFMono-Regular", Menlo, monospace);
 }
 
 @theme {
@@ -62,10 +62,10 @@ h1 {
 @media (prefers-color-scheme: dark) {
   .prose {
     --tw-prose-body: var(--color-stone-300);
-  --tw-prose-headings: var(--color-stone-100);
-  --tw-prose-links: var(--color-accent-400);
-  --tw-prose-bold: var(--color-stone-100);
-  --tw-prose-quotes: var(--color-stone-300);
+    --tw-prose-headings: var(--color-stone-100);
+    --tw-prose-links: var(--color-accent-400);
+    --tw-prose-bold: var(--color-stone-100);
+    --tw-prose-quotes: var(--color-stone-300);
     --tw-prose-hr: var(--color-slate-800);
     --tw-prose-th-borders: var(--color-slate-700);
     --tw-prose-td-borders: var(--color-slate-800);

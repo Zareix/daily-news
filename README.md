@@ -73,11 +73,11 @@ Les polices passent par la **Fonts API d'Astro** (`fonts` dans `astro.config.mjs
 donc **aucune requête vers Google chez le visiteur**, avec des fallbacks à métriques ajustées pour
 éviter le décalage de mise en page pendant le chargement.
 
-| Rôle | Police |
-| --- | --- |
-| Nom du site et `h1` | Newsreader (serif) |
-| Corps, interface, `h2`/`h3` | Inter |
-| Blocs de code | JetBrains Mono |
+| Rôle                        | Police             |
+| --------------------------- | ------------------ |
+| Nom du site et `h1`         | Newsreader (serif) |
+| Corps, interface, `h2`/`h3` | Inter              |
+| Blocs de code               | JetBrains Mono     |
 
 Les familles du thème pointent sur les variables injectées par `<Font />` via un bloc `@theme inline`
 (un `@theme` classique recopierait la valeur à la compilation et casserait le lien). Ne pas
@@ -95,10 +95,10 @@ Le reste du site (HTML) reste en revalidation à chaque visite.
 ---
 date: 2026-09-29
 tlDr:
-  - '🇫🇷 Un point France.'
-  - '💻 Un point code/tech.'
-  - '🔒 Un point cybersécu, actionnable si possible.'
-  - '🌍 Un point international.'
+  - "🇫🇷 Un point France."
+  - "💻 Un point code/tech."
+  - "🔒 Un point cybersécu, actionnable si possible."
+  - "🌍 Un point international."
 tags:
   - cybersecurite
   - cve
@@ -136,13 +136,13 @@ chaque push sur `main` : aucun secret GitHub à maintenir.
 
 Réglages à saisir à la connexion :
 
-| Réglage | Valeur |
-| --- | --- |
-| Project name | `daily-news` (doit correspondre à `name` dans `wrangler.jsonc`) |
-| Build command | `bun run build` |
-| Deploy command | `npx wrangler deploy` |
-| Variable de build | `BUN_VERSION` = `1.4.2` — **indispensable** |
-| Variable de build | `NODE_VERSION` = `22.23.2` |
+| Réglage           | Valeur                                                          |
+| ----------------- | --------------------------------------------------------------- |
+| Project name      | `daily-news` (doit correspondre à `name` dans `wrangler.jsonc`) |
+| Build command     | `bun run build`                                                 |
+| Deploy command    | `npx wrangler deploy`                                           |
+| Variable de build | `BUN_VERSION` = `1.4.2` — **indispensable**                     |
+| Variable de build | `NODE_VERSION` = `22.23.2`                                      |
 
 Pourquoi ces deux variables :
 
