@@ -22,8 +22,9 @@ bun run check     # astro check && tsc --noEmit — à lancer avant de terminer
 bun run deploy    # wrangler deploy (déploiement manuel ; le push sur main suffit sinon)
 ```
 
-La recherche (`/search/`) s'appuie sur l'index **Pagefind** généré au build : elle ne marche
-pas en dev sans un `bun run build` préalable.
+La recherche s'ouvre en modale depuis l'icône loupe de l'en-tête (Component UI de Pagefind,
+raccourci ⌘ K / Ctrl+K) et s'appuie sur l'index **Pagefind** généré au build : en dev sans un
+`bun run build` préalable, les fichiers `/pagefind/` n'existent pas et l'icône n'apparaît pas.
 
 ## Contenu
 

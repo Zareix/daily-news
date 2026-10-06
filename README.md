@@ -55,14 +55,13 @@ astro.config.mjs           polices (Fonts API d'Astro), Tailwind, site, préchar
 src/
   content.config.ts        schéma Zod du frontmatter (date, title, tlDr, tags)
   content/news/*.md        un briefing par jour, nommé <YYYY-MM-DD>.md
-  layouts/Layout.astro     coquille HTML : thème système (prefers-color-scheme), SEO, RSS, liens sortants
+  layouts/Layout.astro     coquille HTML : thème système (prefers-color-scheme), SEO, RSS, liens sortants, modale de recherche Pagefind (⌘K)
   components/BriefingCard.astro
   lib/dates.ts             formatage déterministe en Europe/Paris
   pages/
     index.astro            dernier briefing + archive groupée par mois
     briefing/[date].astro  briefing complet : sommaire, TL;DR, navigation précédent/suivant
     tags/{index,[tag]}.astro
-    search.astro           recherche plein texte (index Pagefind généré au build)
     about.astro            404.astro
     rss.xml.ts
 ```

@@ -115,3 +115,61 @@ h1 {
     transform 0.2s ease-out,
     visibility 0s;
 }
+
+/* Modale de recherche Pagefind (Component UI) : ses composants appliquent `all: initial`
+   sur leur hôte, seules les variables CSS les traversent. La modale ne détecte pas
+   `prefers-color-scheme` d'elle-même : on lui applique la même palette que le site,
+   y compris en sombre. */
+:root {
+  --pf-font: var(--font-inter, ui-sans-serif, system-ui, -apple-system, sans-serif);
+  --pf-text: var(--color-slate-900);
+  --pf-text-secondary: var(--color-slate-600);
+  --pf-text-muted: var(--color-slate-500);
+  --pf-background: var(--color-white);
+  --pf-border: var(--color-slate-200);
+  --pf-border-focus: var(--color-slate-400);
+  --pf-skeleton: var(--color-slate-100);
+  --pf-skeleton-shine: var(--color-slate-50);
+  --pf-hover: var(--color-slate-100);
+  --pf-mark: var(--color-slate-900);
+  --pf-outline-focus: var(--color-accent-600);
+  --pf-modal-backdrop: rgb(0 0 0 / 0.5);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --pf-text: var(--color-stone-100);
+    --pf-text-secondary: var(--color-slate-300);
+    --pf-text-muted: var(--color-slate-400);
+    --pf-background: var(--color-slate-900);
+    --pf-border: var(--color-slate-800);
+    --pf-border-focus: var(--color-slate-600);
+    --pf-skeleton: var(--color-slate-800);
+    --pf-skeleton-shine: var(--color-slate-700);
+    --pf-hover: var(--color-slate-800);
+    --pf-mark: var(--color-stone-100);
+    --pf-outline-focus: var(--color-accent-400);
+    --pf-modal-backdrop: rgb(0 0 0 / 0.65);
+    --pf-error-bg: #2a1a1a;
+    --pf-error-border: #5c2828;
+    --pf-error-text: #f87171;
+    --pf-error-text-secondary: #ef4444;
+  }
+}
+
+/* Dans la nav, le déclencheur est une icône nue qui s'encadre à l'accent au survol,
+   comme les liens voisins changent de fond. */
+nav pagefind-modal-trigger {
+  --pf-input-height: 30px;
+  --pf-background: transparent;
+  --pf-border: transparent;
+  --pf-border-focus: var(--color-accent-600);
+  --pf-text-muted: var(--color-slate-600);
+}
+
+@media (prefers-color-scheme: dark) {
+  nav pagefind-modal-trigger {
+    --pf-border-focus: var(--color-accent-400);
+    --pf-text-muted: var(--color-slate-400);
+  }
+}

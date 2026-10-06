@@ -19,11 +19,8 @@ const fullTitle = title === 'Daily News' ? 'Daily News — briefing quotidien' :
 
 // La page d'accueil (« Briefings ») n'est pas répétée ici : le logo y mène déjà.
 // « À propos » et le sélecteur de thème vivent dans le pied de page.
-// `icon` remplace le libellé visible ; `label` reste le nom accessible (aria-label + title).
-const nav: { href: string; label: string; icon?: 'search' }[] = [
-  { href: '/tags/', label: 'Tags' },
-  { href: '/search/', label: 'Recherche', icon: 'search' },
-];
+// La recherche vit dans la modale Pagefind (icône loupe plus bas dans la nav).
+const nav: { href: string; label: string }[] = [{ href: '/tags/', label: 'Tags' }];
 
 const current = Astro.url.pathname;
 const isActive = (href: string) => (href === '/' ? current === '/' : current.startsWith(href));
@@ -54,6 +51,12 @@ const isActive = (href: string) => (href === '/' ? current === '/' : current.sta
       title="Daily News"
       href={new URL('/rss.xml', site)}
     />
+
+    {/* Recherche : modale Pagefind (Component UI). L'index n'existe qu'après un build
+        (`pagefind --site dist`) ; en dev les deux fichiers 404 et la modale est simplement absente. */}
+    <link rel="stylesheet" href="/pagefind/pagefind-component-ui.css" />
+    <script is:inline src="/pagefind/pagefind-component-ui.js" type="module"></script>
+
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Daily News" />
     <meta property="og:title" content={fullTitle} />
@@ -87,8 +90,6 @@ const isActive = (href: string) => (href === '/' ? current === '/' : current.sta
               <a
                 href={item.href}
                 aria-current={isActive(item.href) ? 'page' : undefined}
-                aria-label={item.icon ? item.label : undefined}
-                title={item.icon ? item.label : undefined}
                 class:list={[
                   'rounded-md px-2 py-1.5 whitespace-nowrap transition-colors sm:px-2.5',
                   isActive(item.href)
@@ -96,26 +97,11 @@ const isActive = (href: string) => (href === '/' ? current === '/' : current.sta
                     : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-stone-100',
                 ]}
               >
-                {item.icon === 'search' ? (
-                  <svg
-                    class="block size-4"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d="m21 21-4.34-4.34"></path>
-                    <circle cx="11" cy="11" r="8"></circle>
-                  </svg>
-                ) : (
-                  item.label
-                )}
+                {item.label}
               </a>
             ))
           }
+          <pagefind-modal-trigger compact placeholder="Recherche"></pagefind-modal-trigger>
         </nav>
 
       </div>
@@ -161,6 +147,8 @@ const isActive = (href: string) => (href === '/' ? current === '/' : current.sta
         <path d="m18 15-6-6-6 6"></path>
       </svg>
     </button>
+
+    <pagefind-modal></pagefind-modal>
 
     <script>
       // Les liens sortants s'ouvrent dans un nouvel onglet.
